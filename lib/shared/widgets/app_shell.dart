@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../features/record/presentation/home_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
+import '../../features/settings/presentation/settings_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -16,7 +17,7 @@ class _AppShellState extends State<AppShell> {
     HomeScreen(),
     HistoryScreen(),
     _PlaceholderPage(label: '통계', icon: Icons.bar_chart_outlined),
-    _PlaceholderPage(label: '설정', icon: Icons.settings_outlined),
+    SettingsScreen(),
   ];
 
   @override
