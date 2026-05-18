@@ -3,10 +3,13 @@ import '../../../core/ai/ai_service.dart';
 import '../../../core/ai/pattern_analyzer.dart';
 import '../../record/domain/record.dart';
 import '../../record/presentation/record_provider.dart';
+import '../../settings/presentation/settings_screen.dart';
 
 final aiServiceProvider = Provider((_) => AiService());
 
 final suggestionProvider = FutureProvider.autoDispose<Record?>((ref) async {
+  final enabled = ref.watch(aiEnabledProvider);
+  if (!enabled) return null;
   final records = await ref.watch(recordListProvider.future);
   final prompt = PatternAnalyzer().buildPrompt(records, DateTime.now());
   if (prompt.isEmpty) return null;

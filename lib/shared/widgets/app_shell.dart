@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../features/record/presentation/home_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
+import '../../features/stats/presentation/stats_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 
 class AppShell extends StatefulWidget {
@@ -16,7 +17,7 @@ class _AppShellState extends State<AppShell> {
   final _pages = const [
     HomeScreen(),
     HistoryScreen(),
-    _PlaceholderPage(label: '통계', icon: Icons.bar_chart_outlined),
+    StatsScreen(),
     SettingsScreen(),
   ];
 
@@ -38,23 +39,3 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
-class _PlaceholderPage extends StatelessWidget {
-  final String label;
-  final IconData icon;
-
-  const _PlaceholderPage({required this.label, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 48, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(height: 12),
-          Text(label, style: Theme.of(context).textTheme.titleLarge),
-        ],
-      ),
-    );
-  }
-}

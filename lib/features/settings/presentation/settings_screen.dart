@@ -1,17 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../features/suggestion/presentation/suggestion_provider.dart';
+
+final aiEnabledProvider = StateNotifierProvider<_AiEnabledNotifier, bool>(
+  (_) => _AiEnabledNotifier(),
+);
+
+class _AiEnabledNotifier extends StateNotifier<bool> {
+  _AiEnabledNotifier() : super(true) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = prefs.getBool('ai_enabled') ?? true;
+  }
+
+  Future<void> toggle(bool value) async {
+    state = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('ai_enabled', value);
+  }
+}
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final aiEnabled = ref.watch(aiEnabledProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('설정')),
       body: ListView(
         children: [
           const _SectionHeader('AI 설정'),
+          SwitchListTile(
+            secondary: const Icon(Icons.auto_awesome_outlined),
+            title: const Text('AI 자동 제안'),
+            subtitle: const Text('패턴 기반 자동 제안 켜기/끄기'),
+            value: aiEnabled,
+            onChanged: (v) => ref.read(aiEnabledProvider.notifier).toggle(v),
+          ),
           ListTile(
             leading: const Icon(Icons.key_outlined),
             title: const Text('Claude API 키'),
