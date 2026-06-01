@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyApp - WBS (Work Breakdown Structure)</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: #ff6b6b;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #aaa;
+            margin-bottom: 50px;
+        }
+        .wbs-chart {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 2px solid rgba(255,107,107,0.3);
+        }
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255,107,107,0.3);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .legend-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        .legend-planning { background: #ff6b6b; }
+        .legend-design { background: #4CAF50; }
+        .legend-development { background: #2196F3; }
+        .legend-testing { background: #FF9800; }
+        .legend-deployment { background: #9C27B0; }
+        .timeline-section {
+            margin-top: 80px;
+        }
+        .timeline-section h2 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #ff6b6b;
+        }
+        .milestone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .milestone-card {
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,107,107,0.5);
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        .milestone-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff6b6b;
+            background: rgba(255,107,107,0.1);
+        }
+        .milestone-card h3 {
+            color: #ff6b6b;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .milestone-card .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .status-completed {
+            background: #4CAF50;
+            color: white;
+        }
+        .status-in-progress {
+            background: #2196F3;
+            color: white;
+        }
+        .status-upcoming {
+            background: #FF9800;
+            color: white;
+        }
+        .milestone-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .milestone-card li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #ddd;
+        }
+        .milestone-card li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .milestone-card.upcoming li:before {
+            content: '○';
+            color: #FF9800;
+        }
+        .date {
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,107,107,0.3);
+        }
+        .gantt-container {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 40px;
+            border: 2px solid rgba(255,107,107,0.3);
+            margin-top: 60px;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 60px;
+        }
+        .stat-box {
+            background: rgba(255,107,107,0.2);
+            border-left: 4px solid #ff6b6b;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-box .number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        .stat-box .label {
+            font-size: 16px;
+            color: #aaa;
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 32px; }
+            .wbs-chart { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 MyApp WBS (Work Breakdown Structure)</h1>
+        <p class="subtitle">프로젝트 작업 분해 구조 및 일정</p>
+
+        <div class="wbs-chart">
+            <h2 style="color: #ff6b6b; margin-bottom: 30px; text-align: center;">📊 전체 프로젝트 계층도</h2>
+            <div class="mermaid">
+                graph TD
+                    A["🚀 MyApp<br/>AI 자동화 앱"] --> B["📋 기획 & 설계<br/>M0-M1"]
+                    A --> C["💻 개발<br/>M1-M3"]
+                    A --> D["🧪 테스트 & 배포<br/>M3-M4"]
+                    
+                    B --> B1["비전 & 요구사항"]
+                    B --> B2["아키텍처 설계"]
+                    B --> B3["UX/UI 설계"]
+                    B --> B4["DB 스키마"]
+                    
+                    C --> C1["수동 기록 기능<br/>M1"]
+                    C --> C2["AI 제안 시스템<br/>M2"]
+                    C --> C3["통계 & 히스토리<br/>M3"]
+                    C --> C4["설정 & 온보딩<br/>M3"]
+                    
+                    C1 --> C1a["카테고리 모델"]
+                    C1 --> C1b["입력 폼 UI"]
+                    C1 --> C1c["SQLite DAO"]
+                    
+                    C2 --> C2a["Pattern Analyzer"]
+                    C2 --> C2b["Claude API"]
+                    C2 --> C2c["Suggestion UI"]
+                    
+                    D --> D1["단위 테스트"]
+                    D --> D2["통합 테스트"]
+                    D --> D3["iOS 빌드"]
+                    D --> D4["Android 빌드"]
+                    D --> D5["베타 배포"]
+                    
+                    style A fill:#ff6b6b,stroke:#fff,stroke-width:3px,color:#fff
+                    style B fill:#e74c3c,stroke:#fff,stroke-width:2px,color:#fff
+                    style C fill:#3498db,stroke:#fff,stroke-width:2px,color:#fff
+                    style D fill:#9b59b6,stroke:#fff,stroke-width:2px,color:#fff
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box legend-planning">📋</div>
+                <div>
+                    <strong>기획</strong>
+                    <p style="font-size: 13px; color: #aaa;">비전, 요구사항, 설계</p>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box legend-design">🎨</div>
+                <div>
+                    <strong>설계</strong>
+                    <p style="font-size: 13px; color: #aaa;">아키텍처, UX, DB</p>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box legend-development">💻</div>
+                <div>
+                    <strong>개발</strong>
+                    <p style="font-size: 13px; color: #aaa;">기능 구현, AI 통합</p>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box legend-testing">🧪</div>
+                <div>
+                    <strong>테스트</strong>
+                    <p style="font-size: 13px; color: #aaa;">QA, 버그 수정</p>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box legend-deployment">🚀</div>
+                <div>
+                    <strong>배포</strong>
+                    <p style="font-size: 13px; color: #aaa;">빌드, 배포, 모니터링</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-section">
+            <h2>📅 마일스톤 & 일정</h2>
+            
+            <div class="milestone-grid">
+                <div class="milestone-card">
+                    <h3>M0: 프로젝트 셋업</h3>
+                    <span class="status status-completed">✅ 완료</span>
+                    <ul>
+                        <li>GitHub 레포 구성</li>
+                        <li>Flutter 환경 설정</li>
+                        <li>CI/CD 파이프라인</li>
+                        <li>기본 프로젝트 구조</li>
+                    </ul>
+                    <div class="date">📍 2026-05-18</div>
+                </div>
+
+                <div class="milestone-card">
+                    <h3>M1: 수동 기록</h3>
+                    <span class="status status-completed">✅ 완료</span>
+                    <ul>
+                        <li>5개 카테고리 모델</li>
+                        <li>입력 폼 UI 개발</li>
+                        <li>SQLite 통합</li>
+                        <li>CRUD 기능</li>
+                    </ul>
+                    <div class="date">📍 2026-05-18</div>
+                </div>
+
+                <div class="milestone-card">
+                    <h3>M2: AI 제안 시스템</h3>
+                    <span class="status status-completed">✅ 완료</span>
+                    <ul>
+                        <li>Pattern Analyzer 개발</li>
+                        <li>Claude API 통합</li>
+                        <li>Suggestion Card UI</li>
+                        <li>수락/수정/거부 로직</li>
+                    </ul>
+                    <div class="date">📍 2026-05-18</div>
+                </div>
+
+                <div class="milestone-card">
+                    <h3>M3: 완성도 & 베타</h3>
+                    <span class="status status-completed">✅ 완료</span>
+                    <ul>
+                        <li>통계 차트 구현</li>
+                        <li>히스토리 화면</li>
+                        <li>온보딩 플로우</li>
+                        <li>설정 페이지</li>
+                    </ul>
+                    <div class="date">📍 2026-05-18</div>
+                </div>
+
+                <div class="milestone-card upcoming">
+                    <h3>M4: 출시 준비</h3>
+                    <span class="status status-upcoming">🔜 예정</span>
+                    <ul>
+                        <li>전체 통합 테스트</li>
+                        <li>iOS 빌드 & 서명</li>
+                        <li>Android 빌드</li>
+                        <li>App Store 제출</li>
+                        <li>Google Play 제출</li>
+                    </ul>
+                    <div class="date">📍 2026-07-20</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="number">4</div>
+                <div class="label">메인 마일스톤</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">9</div>
+                <div class="label">주요 기능</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">7</div>
+                <div class="label">화면 페이지</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">13</div>
+                <div class="label">주요 라이브러리</div>
+            </div>
+        </div>
+
+        <div class="gantt-container">
+            <h2 style="color: #ff6b6b; margin-bottom: 30px; text-align: center;">📈 Gantt 차트</h2>
+            <div class="mermaid">
+                gantt
+                    title MyApp 7주 로드맵 (2026-05-18 ~ 2026-07-20)
+                    dateFormat YYYY-MM-DD
+                    
+                    section 기획
+                    요구사항 분석           :des1, 2026-05-18, 7d
+                    아키텍처 설계          :des2, 2026-05-25, 7d
+                    
+                    section M1
+                    수동 기록 기능          :m1, 2026-06-01, 7d
+                    
+                    section M2
+                    AI 제안 시스템          :m2, 2026-06-08, 7d
+                    
+                    section M3
+                    통계 & 완성도           :m3, 2026-06-15, 14d
+                    
+                    section M4
+                    테스트 & 배포           :m4, 2026-06-29, 21d
+                    
+                    section 운영
+                    모니터링 & 업데이트     :dev, 2026-07-20, 30d
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+        mermaid.contentLoaded();
+    </script>
+</body>
+</html>

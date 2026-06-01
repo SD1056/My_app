@@ -1,0 +1,14 @@
+# GitHub Pages 설정
+remote_theme: pages-themes/slate@v0.2.0
+plugins:
+  - jekyll-remote-theme
+
+title: MyApp - AI 패턴 학습 자동화 앱
+description: 반복되는 데이터 입력을 AI가 자동으로 제안하는 Flutter 모바일 앱
+author: SD1056
+
+# 사이트 설정
+show_downloads: false
+GitHub:
+  is_project_page: true
+  repository_url: https://github.com/SD1056/My_app
