@@ -21,7 +21,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ),
     _Slide(
       emoji: '🤖',
-      title: 'AI가 패턴을 학습해서\n대신 제안해드려요',
+      title: 'AI가 패턴을 학습해서\n대신 제안해',
       subtitle: '사용할수록 똑똑해지는 AI가\n다음 기록을 먼저 제안합니다',
     ),
     _Slide(
