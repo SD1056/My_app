@@ -16,7 +16,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const _slides = [
     _Slide(
       emoji: '📱',
-      title: '매일 반복되는 기록을\n자동화해요',
+      title: '매일 반복되는 기록을\n자동화해',
       subtitle: '지출, 운동, 식단 등\n번거로운 기록을 쉽게 남기세요',
     ),
     _Slide(
