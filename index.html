@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyApp - AI 패턴 학습 자동화 앱 발표</title>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/plugin/highlight/highlight.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
+    <style>
+        .reveal h1, .reveal h2, .reveal h3 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-transform: none;
+        }
+        .reveal {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        .slide-timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff6b6b;
+            z-index: 100;
+            background: rgba(0,0,0,0.5);
+            padding: 15px 25px;
+            border-radius: 10px;
+            min-width: 80px;
+            text-align: center;
+        }
+        .vision-box {
+            background: rgba(255,255,255,0.1);
+            border-left: 5px solid #ff6b6b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .problem-item {
+            text-align: left;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 5px;
+        }
+        .architecture-diagram {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.8;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #ff6b6b;
+        }
+        .feature-card h3 {
+            margin-top: 0;
+            color: #ff6b6b;
+        }
+        .timeline {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        .timeline-item {
+            margin: 20px 0;
+            padding-left: 30px;
+            border-left: 3px solid #ff6b6b;
+            position: relative;
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 0;
+            width: 15px;
+            height: 15px;
+            background: #ff6b6b;
+            border-radius: 50%;
+        }
+        .stack-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .okr-section {
+            text-align: left;
+            margin: 20px 0;
+        }
+        .okr-section h4 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+        .okr-item {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+        .mermaid-container {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 18px;
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-timer" id="timer">2:00</div>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Slide 1: Title -->
+            <section>
+                <h1 style="font-size: 60px; margin-bottom: 20px;">MyApp</h1>
+                <h3 style="color: #ff6b6b; margin-bottom: 40px;">AI가 패턴을 학습해서 데이터 입력을 자동화하는 모바일 앱</h3>
+                <p style="font-size: 20px; margin: 30px 0;">지출 • 운동 • 식단 • 수면 • 메모</p>
+                <p style="color: #aaa; font-size: 16px;">Flutter + Claude AI로 만든 스마트 자동화 앱</p>
+            </section>
+
+            <!-- Slide 2: Vision & Problem Statement (30초) -->
+            <section>
+                <h2>비전 & 문제 정의</h2>
+                <div class="vision-box">
+                    <h3 style="color: #ff6b6b; margin-top: 0;">반복적인 일상 기록을 자동화하여 사용자 시간을 회복합니다</h3>
+                    <p style="font-size: 16px; margin-top: 15px; color: #ddd;">
+                        사용자의 지출, 운동, 식단, 수면, 메모 기록은 같은 흐름이 반복되지만 매일 다시 입력해야 합니다.
+                    </p>
+                    <p style="font-size: 16px; margin-top: 10px; color: #ddd;">
+                        MyApp은 과거 기록의 패턴을 분석하여 다음에 입력할 데이터를 미리 제안함으로써
+                        불필요한 반복 작업을 줄이고 사용자의 집중 시간을 늘립니다.
+                    </p>
+                    <p style="font-size: 16px; margin-top: 10px; color: #ddd;">
+                        목표는 단순한 편리함이 아니라, 매일의 기록을 더 나은 습관과 개인 맞춤형 인사이트로 연결하는 것입니다.
+                    </p>
+                </div>
+                <div class="problem-item">
+                    <strong>문제:</strong> 사용자는 매일 유사한 데이터를 반복 입력해야 합니다.
+                </div>
+                <div class="problem-item">
+                    <strong>솔루션:</strong> AI가 과거 패턴을 학습해 다음 기록을 먼저 제안합니다.
+                </div>
+                <div class="problem-item">
+                    <strong>효과:</strong> 확인으로 기록을 완료해 입력 시간을 크게 줄입니다.
+                </div>
+            </section>
+
+            <!-- Slide 3: Key Features -->
+            <section>
+                <h2>핵심 기능</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>수동 기록</h3>
+                        <p>5개 카테고리를 빠르게 입력</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>AI 자동 제안</h3>
+                        <p>30일 패턴 분석 후 적합한 다음 기록을 제안</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>원탭 수락</h3>
+                        <p>제안을 확인하고 즉시 저장</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>통계 분석</h3>
+                        <p>주간·월간 차트와 행동 인사이트 제공</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Architecture (45초) -->
+            <section>
+                <h2>시스템 아키텍처</h2>
+                <div class="architecture-diagram">
+                    <div style="margin-bottom: 30px;">
+                        <p style="font-size: 20px; color: #ff6b6b; margin: 0;">Presentation Layer</p>
+                        <p style="font-size: 14px; color: #aaa; margin: 5px 0;">Flutter Widgets + Riverpod</p>
+                    </div>
+                    <div style="font-size: 24px; margin: 15px 0;">down</div>
+                    <div style="margin-bottom: 30px;">
+                        <p style="font-size: 20px; color: #ff6b6b; margin: 0;">Business Logic</p>
+                        <p style="font-size: 14px; color: #aaa; margin: 5px 0;">Pattern Analyzer + AI Service</p>
+                    </div>
+                    <div style="font-size: 24px; margin: 15px 0;">down</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <div>
+                            <p style="font-size: 18px; color: #ff6b6b; margin: 0;">Local</p>
+                            <p style="font-size: 14px; color: #aaa;">SQLite</p>
+                        </div>
+                        <div>
+                            <p style="font-size: 18px; color: #ff6b6b; margin: 0;">Cloud</p>
+                            <p style="font-size: 14px; color: #aaa;">Claude API</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Tech Stack -->
+            <section>
+                <h2>기술 스택</h2>
+                <div style="text-align: center; margin: 30px 0;">
+                    <div>
+                        <h4 style="color: #ff6b6b; margin-bottom: 15px;">Framework & Language</h4>
+                        <div>
+                            <span class="stack-badge">Flutter 3.41.9</span>
+                            <span class="stack-badge">Dart 3.11.5</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <h4 style="color: #ff6b6b; margin-bottom: 15px;">Key Libraries</h4>
+                        <div>
+                            <span class="stack-badge">Riverpod</span>
+                            <span class="stack-badge">SQLite</span>
+                            <span class="stack-badge">Dio (HTTP)</span>
+                            <span class="stack-badge">FL Chart</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <h4 style="color: #ff6b6b; margin-bottom: 15px;">AI Engine</h4>
+                        <div>
+                            <span class="stack-badge">Claude Sonnet 4.6</span>
+                            <span class="stack-badge">Anthropic API</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6: Data Flow -->
+            <section>
+                <h2>데이터 흐름</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>사용자가 기록 화면을 엽니다</strong>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Pattern Analyzer</strong>
+                        <p style="font-size: 14px; color: #aaa; margin: 5px 0;">로컬 30일 기록을 분석합니다.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Claude API 호출</strong>
+                        <p style="font-size: 14px; color: #aaa; margin: 5px 0;">패턴 데이터를 전송해 제안을 생성합니다.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Suggestion Card 표시</strong>
+                        <p style="font-size: 14px; color: #aaa; margin: 5px 0;">AI가 추천한 다음 기록을 보여줍니다.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>수락 / 수정 / 건너뜀</strong>
+                        <p style="font-size: 14px; color: #aaa; margin: 5px 0;">선택한 내용을 SQLite에 저장합니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: OKR & Roadmap (30초) -->
+            <section>
+                <h2>OKR & 로드맵</h2>
+                <div class="okr-section">
+                    <h4>Objective: 반복 기록 시간 70% 단축</h4>
+                    <div class="okr-item">Key Result 1: 3초 → 1초 입력 흐름 단축</div>
+                    <div class="okr-item">Key Result 2: 30일 이상 사용 시 AI 제안 정확도 95% 달성</div>
+                    <div class="okr-item">Key Result 3: iOS 및 Android 베타 배포 완료</div>
+                </div>
+                <div class="okr-section" style="margin-top: 40px;">
+                    <h4>7주 로드맵</h4>
+                    <div class="okr-item">M0-M3: 프로젝트 셋업부터 AI 제안까지 구현 완료 (5.18)</div>
+                    <div class="okr-item">M4: 최종 출시 준비 및 사용자 테스트 진행 (예정 7.20)</div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Project Structure & Demo -->
+            <section>
+                <h2>프로젝트 구조</h2>
+                <div style="text-align: left; font-size: 18px; font-family: 'Courier New'; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <pre style="margin: 0; line-height: 1.6;">Myapp/
+├── lib/
+│   ├── core/
+│   │   ├── database/     # SQLite
+│   │   └── ai/          # Claude API + Pattern
+│   ├── features/
+│   │   ├── record/      # 기록 기능
+│   │   ├── suggestion/  # AI 제안
+│   │   ├── stats/       # 통계
+│   │   └── settings/    # 설정
+│   └── shared/          # UI Components
+├── .github/workflows/   # CI/CD (GitHub Actions)
+└── .planning/           # 기획 문서</pre>
+                </div>
+            </section>
+
+            <!-- Slide 9: Closing -->
+            <section>
+                <h1 style="font-size: 50px; color: #ff6b6b; margin-bottom: 40px;">임팩트</h1>
+                <div class="vision-box" style="border-left-color: #4CAF50;">
+                    <h3 style="color: #4CAF50; margin: 0; font-size: 28px;">일 3분 × 365일 = 연 18시간 절약</h3>
+                </div>
+                <p style="font-size: 24px; margin-top: 50px;">지금 바로 API 키를 설정하고 AI 제안을 활성화하세요.</p>
+                <p style="font-size: 16px; color: #aaa; margin-top: 40px;"><a href="https://github.com/SD1056/My_app" style="color: #ff6b6b;">GitHub Repository</a></p>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Reveal.js
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            transitionSpeed: 'slow',
+            controls: true,
+            progress: true,
+            center: true,
+            slideNumber: true,
+            overview: true,
+            keyboard: true,
+            touch: true,
+            loop: false,
+            width: 1200,
+            height: 800,
+            margin: 0.1
+        });
+
+        // 2-minute presentation timer
+        let totalSeconds = 120;
+        let elapsedSeconds = 0;
+        let timerInterval;
+
+        function updateTimer() {
+            elapsedSeconds++;
+            const remaining = totalSeconds - elapsedSeconds;
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            
+            const timerDisplay = document.getElementById('timer');
+            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (remaining <= 30) {
+                timerDisplay.style.color = '#ff6b6b';
+                timerDisplay.style.fontSize = '36px';
+            }
+            if (remaining <= 0) {
+                clearInterval(timerInterval);
+                timerDisplay.textContent = '시간 종료!';
+                timerDisplay.style.color = '#ff6b6b';
+            }
+        }
+
+        // Start timer on first interaction
+        document.addEventListener('click', function startTimer() {
+            if (!timerInterval) {
+                timerInterval = setInterval(updateTimer, 1000);
+                document.removeEventListener('click', startTimer);
+            }
+        });
+
+        // Keyboard start with spacebar or arrow keys
+        document.addEventListener('keydown', function(event) {
+            if (!timerInterval && (event.code === 'Space' || event.code.startsWith('Arrow'))) {
+                timerInterval = setInterval(updateTimer, 1000);
+                document.removeEventListener('keydown', arguments.callee);
+            }
+        });
+    </script>
+</body>
+</html>
